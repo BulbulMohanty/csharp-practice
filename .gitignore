@@ -1,0 +1,41 @@
+## --- Compiled Output ---
+bin/
+obj/
+publish/
+
+## --- Visual Studio & IDEs ---
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.idea/
+.vscode/
+# Note: Keep .vscode/launch.json if you want to share debug settings
+
+## --- User Secrets & Local Config ---
+# Do NOT commit your actual secrets
+appsettings.Development.json
+*.secret.json
+
+## --- Test Results & Coverage ---
+TestResults/
+*.sequenced
+*.coverage
+*.coveragexml
+
+## --- NuGet Packages ---
+# Modern .NET uses a global cache, but this handles local 'packages' folders
+packages/
+*.nuget.props
+*.nuget.targets
+
+## --- OS Generated Files ---
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+## --- Tools ---
+.ionide/
+.fake/
+.paket/
