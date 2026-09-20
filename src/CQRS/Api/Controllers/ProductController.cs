@@ -5,14 +5,11 @@ using Api.Requests.Product;
 using Api.Responses.Product;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Collections.Immutable;
 
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("[api/products]")]
+    [Route("api/products")]
     public class ProductController : ControllerBase
     {
         private readonly ISender _sender;

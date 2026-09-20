@@ -1,7 +1,6 @@
 ﻿using Api.Commands.Product;
 using Api.DB;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Api.CommandsHandler.Product
 {
