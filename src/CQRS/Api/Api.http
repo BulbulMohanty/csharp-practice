@@ -7,7 +7,55 @@ Accept: application/json
 ###
 POST {{Api_HostAddress}}/api/products/create
 Content-Type: application/json
+
 {
   "name": "Wire Mouse",
   "price": 1.49
 }
+
+###
+# Get all Todos
+GET {{Api_HostAddress}}/api/todos
+Accept: application/json
+
+###
+# Get completed Todos only
+GET {{Api_HostAddress}}/api/todos?isCompleted=true
+Accept: application/json
+
+###
+# Create a new Todo
+POST {{Api_HostAddress}}/api/todos
+Content-Type: application/json
+
+{
+  "title": "Learn CQRS with MediatR",
+  "description": "Understand Commands, Queries, Handlers, and AutoMapper",
+  "priority": 3,
+  "dueDate": "2026-10-01T12:00:00Z"
+}
+
+###
+# Get Todo by ID (replace with actual GUID)
+GET {{Api_HostAddress}}/api/todos/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+###
+# Update Todo (replace with actual GUID)
+PUT {{Api_HostAddress}}/api/todos/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "title": "Learn CQRS with MediatR (Updated)",
+  "description": "Completed first pass of handlers",
+  "priority": 2,
+  "dueDate": "2026-10-05T12:00:00Z"
+}
+
+###
+# Toggle Todo completion status (replace with actual GUID)
+PATCH {{Api_HostAddress}}/api/todos/00000000-0000-0000-0000-000000000000/toggle
+
+###
+# Delete Todo (replace with actual GUID)
+DELETE {{Api_HostAddress}}/api/todos/00000000-0000-0000-0000-000000000000

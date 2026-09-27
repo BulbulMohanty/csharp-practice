@@ -1,4 +1,4 @@
-﻿using Api.Entities;
+using Api.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.DB
@@ -8,5 +8,6 @@ namespace Api.DB
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
 
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<TodoItem> TodoItems => Set<TodoItem>();
     }
 }
