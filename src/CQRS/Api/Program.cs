@@ -1,44 +1,69 @@
 using Api.DB;
+using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
-var builder = WebApplication.CreateBuilder(args);
-
-//Register DbContext with PostgreSQL
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-// Add services to the container.
-
-//Add mediater
-builder.Services.AddMediatR(configuration => 
-configuration.RegisterServicesFromAssembly(typeof(Program).Assembly)
-);
-
-// Retrieve the license key from configuration
-var licenseKey = builder.Configuration["AutoMapper:LicenseKey"];
-//Register all profile classes found in the current assembly
-builder.Services.AddAutoMapper(cfg =>
+namespace Api
 {
-    cfg.LicenseKey = licenseKey;
-},
-AppDomain.CurrentDomain.GetAssemblies());
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+            // Register DbContext with PostgreSQL
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-// Add Swagger/OpenAPI services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+            // Add MediatR
+            builder.Services.AddMediatR(configuration => 
+                configuration.RegisterServicesFromAssembly(typeof(Program).Assembly)
+            );
 
-var app = builder.Build();
+            // Retrieve the license key from configuration
+            var licenseKey = builder.Configuration["AutoMapper:LicenseKey"];
+            // Register all profile classes found in the current assembly
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.LicenseKey = licenseKey;
+            },
+            AppDomain.CurrentDomain.GetAssemblies());
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+            builder.Services.AddControllers();
+
+            // Add API Versioning with MVC, API Explorer, and OpenAPI integration
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+            .AddMvc()
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            })
+            .AddOpenApi();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.MapOpenApi().WithDocumentPerVersion();
+                app.MapScalarApiReference(options =>
+                {
+                    options.WithTitle("CQRS API");
+                });
+            }
+
+            app.UseAuthorization();
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
 }
 
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

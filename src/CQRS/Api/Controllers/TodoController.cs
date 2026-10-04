@@ -2,6 +2,7 @@ using Api.Commands.Todo;
 using Api.Queries.Todo;
 using Api.Requests.Todo;
 using Api.Responses.Todo;
+using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("api/todos")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/todos")]
     public class TodoController : ControllerBase
     {
         private readonly ISender _sender;
@@ -41,7 +43,7 @@ namespace Api.Controllers
         {
             var command = _mapper.Map<CreateTodoItemCommand>(request);
             var id = await _sender.Send(command, cancellationToken);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            return CreatedAtAction(nameof(GetById), new { id, version = "1.0" }, id);
         }
 
         [HttpPut("{id:guid}")]

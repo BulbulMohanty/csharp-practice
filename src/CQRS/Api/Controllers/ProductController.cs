@@ -1,25 +1,26 @@
-﻿using Api.Commands.Product;
-using Api.DB;
+using Api.Commands.Product;
 using Api.Queries.Product;
 using Api.Requests.Product;
 using Api.Responses.Product;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("api/products")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/products")]
     public class ProductController : ControllerBase
     {
         private readonly ISender _sender;
 
-        public ProductController(ApplicationDbContext dbContenxt, ISender sender)
+        public ProductController(ISender sender)
         {
             _sender = sender;
         }
 
-        [HttpGet("getall")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(CancellationToken cancellationToken)
         {
             GetProductsQuery getProductsQuery = new();
@@ -27,12 +28,13 @@ namespace Api.Controllers
             return Ok(products);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<ActionResult<Guid>> CreateProduct(CreateProductRequest createProductRequest, CancellationToken cancellationToken)
         {
-            CreateProductCommand createProductCommand = new() { 
-                Name = createProductRequest.Name, 
-                Price = createProductRequest.Price 
+            CreateProductCommand createProductCommand = new()
+            {
+                Name = createProductRequest.Name,
+                Price = createProductRequest.Price
             };
 
             var productId = await _sender.Send(createProductCommand, cancellationToken);
